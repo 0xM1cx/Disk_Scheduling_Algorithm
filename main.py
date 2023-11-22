@@ -38,7 +38,7 @@ class App(customtkinter.CTk):
         self.geometry("900x600")
 
         self.optionMenu = OptionMenu(self)
-        self.optionMenu.pack()
+        self.optionMenu.pack(side="bottom")
 
 
 if __name__ == "__main__":
