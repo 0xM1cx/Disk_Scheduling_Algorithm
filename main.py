@@ -35,8 +35,6 @@ class OptionMenu(customtkinter.CTkFrame):
         self.inner_Disk.grid(row=1, column=0)
 
         ### Entry box for the start head disk ###
-
-
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -45,8 +43,6 @@ class App(customtkinter.CTk):
 
         self.optionMenu = OptionMenu(self)
         self.optionMenu.pack()
-
-
 if __name__ == "__main__":
     app = App()
     app.mainloop()
