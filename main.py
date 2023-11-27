@@ -36,8 +36,13 @@ class RequestTable(customtkinter.CTkScrollableFrame):
                 self.rowCounter += 1
             elif(i < 11):
                 self.entry = customtkinter.CTkEntry(target_frame)
-                self.entry.grid(row=i, column=0, pady=5, padx=5, sticky="ew", columnspan=2)
+                self.entry.grid(row=i, column=0, pady=2, padx=5, sticky="ew", columnspan=2)
                 self.entries.append(self.entry)
+            elif(i > 22):
+                self.entry = customtkinter.CTkEntry(target_frame)
+                self.entry.grid(row=self.rowCounter, column=self.columnCounter, pady=5, padx=5, sticky="ew")
+                self.entries.append(self.entry)
+                self.rowCounter += 1
 
     
 class OptionMenu(customtkinter.CTkFrame):
