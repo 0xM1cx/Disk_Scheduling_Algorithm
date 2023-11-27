@@ -23,7 +23,9 @@ class RequestTable(customtkinter.CTkScrollableFrame):
         self.columnconfigure((0, 1), weight=1)
 
     def displayEntries(self, target_frame, noOfRequests):
+        print(self.winfo_children())
         
+
         for i in range(noOfRequests):
             if(i >= 11):
                 self.columnCounter = 1
@@ -32,16 +34,16 @@ class RequestTable(customtkinter.CTkScrollableFrame):
                     self.flag = False
                 self.entry = customtkinter.CTkEntry(target_frame)
                 self.entry.grid(row=self.rowCounter, column=self.columnCounter, pady=5, padx=5, sticky="ew")
-                self.entries.append(self.entry)
+                self.entries.append((self.rowCounter, self.columnCounter))
                 self.rowCounter += 1
             elif(i < 11):
                 self.entry = customtkinter.CTkEntry(target_frame)
                 self.entry.grid(row=i, column=0, pady=2, padx=5, sticky="ew", columnspan=2)
-                self.entries.append(self.entry)
+                self.entries.append((i, 0))
             elif(i > 22):
                 self.entry = customtkinter.CTkEntry(target_frame)
                 self.entry.grid(row=self.rowCounter, column=self.columnCounter, pady=5, padx=5, sticky="ew")
-                self.entries.append(self.entry)
+                self.entries.append((self.rowCounter, self.columnCounter))
                 self.rowCounter += 1
 
     
