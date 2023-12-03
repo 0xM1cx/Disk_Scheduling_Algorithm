@@ -1,32 +1,67 @@
 import customtkinter
 import tkinter as tk
 from tkinter import ttk
+from time import sleep
+
+## Plotting Stuff
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+
+## Algorithms
+from FCFS import FCFS
 '''
 * The width of the RequestTable must be lesser than the width of the ScatterLineChart
 '''
-### TODO ###
-# When the displayEntries function is called, it must 1st destroy any entries to prevent overlap
-# Make the entries responsive
+entries = []
+
+class ErrorMessage(customtkinter.CTkToplevel):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.geometry("500x500")
+        font = customtkinter.CTkFont(family="Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace", size=40)
+        self.label = customtkinter.CTkLabel(self, font=font, width = 100, height=100, text_color="#b5e853")
 
 class ScatterLineChart(customtkinter.CTkScrollableFrame):
     def __init__(self, master):
         super().__init__(master)
 
+    def start(self, x_data, y_data):
+        self.x_data = x_data
+        self.y_data = y_data
+
+        self.fig, self.ax = plt.subplots(figsize=(10, 9), dpi=100)
+        self.line, = self.ax.plot(self.x_data, self.y_data)
+        
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self)
+        self.canvas_widget = self.canvas.get_tk_widget()
+        self.canvas_widget.pack() 
+
+    def update_plot(self, x_data, y_data):
+        self.start(x_data, y_data)
+        self.canvas.draw()
+
 #### The widgets in the frames must be in a grid
 class RequestTable(customtkinter.CTkScrollableFrame):
-    entries = []
-    columnCounter = 0
     rowCounter = 0
     flag = True
     def __init__(self, master):
         super().__init__(master)
-        self.columnconfigure((0, 1), weight=1)
+        self.columnconfigure((0), weight=1)
 
     def displayEntries(self, target_frame, noOfRequests):
+        global entries
+
+        if len(entries) != 0:
+            for entry in entries:
+                entry.destroy()
+            entries = []
+
+
         for i in range(noOfRequests):
-                self.entry = customtkinter.CTkEntry(target_frame)
-                self.entry.grid(row=self.rowCounter, column=self.columnCounter, pady=5, padx=5, sticky="ew")
-                self.entries.append((self.rowCounter, self.columnCounter))
+                entry = customtkinter.CTkEntry(target_frame)
+                entry.grid(row=self.rowCounter, column=0, pady=5, padx=80, sticky="ew")
+                entries.append(entry)
                 self.rowCounter += 1
 
     
@@ -53,21 +88,49 @@ class OptionMenu(customtkinter.CTkFrame):
         self.NumRequest = customtkinter.CTkEntry(self, font=font, text_color="#b5e853", placeholder_text="No. of Requests")
         self.NumRequest.grid(row=1, column=2)
 
-
         ### Algorithm Picker ###
         self.pickAlgo = customtkinter.CTkComboBox(self, values=["FCFS", "SSTF", "SCAN", "LOOK", "C-SCAN", "C-LOOK"], command=self.getInput)
         self.pickAlgo.set("Pick A Algorithm")
         self.pickAlgo.grid(row=0, column=3, padx=10, pady=10)
-        ### Start Button ###
-        self.startBtn = customtkinter.CTkButton(self, text_color="#b5e853", font=font, fg_color="#1a1a1a", text="Execute", command=self.startExecution)
-        self.startBtn.grid(row=1, column=3, padx=10, pady=10)
 
+        ### Start Button ###
+        self.startBtn = customtkinter.CTkButton(self, text_color="#b6e853", font=font, fg_color="#1a1a1a", text="Execute", command=self.startExecution)
+        self.startBtn.grid(row=1, column=3, padx=10, pady=10)
+        
     def startExecution(self):
-        pass
+        DISK_ALGORITHMS = {
+            "FCFS": FCFS()
+        }
+        global entries
+        requests = [int(entry.get()) for entry in entries]
+        
+        # check if the request are within the number of disks
+        for value in requests:
+            if value < 0 or value > int(self.inner_Disk.get()):
+                error = ErrorMessage()
+                self.removeAllInput()
+        requests.insert(0, int(self.headDisk.get())) 
+
+        res_floats = DISK_ALGORITHMS[self.pickAlgo.get()].executeAlgorithm(requests)
+
+
+        print(requests)
+        print(res_floats)
+        chart = self.master.scatterLineChart
+        chart.update_plot(res_floats, requests)
+         
+
+
 
     def getInput(self, value):
         self.test = RequestTable(self)
         self.test.displayEntries(target_frame=self.master.requestFrame, noOfRequests=int(self.NumRequest.get()))
+
+    def removeAllInput(self):
+        self.inner_Disk.delete("0.0", "end")
+        self.headDisk.delete("0.0", "end")
+        self.NumRequest.delete("0.0", "end")
+
 
 
 class App(customtkinter.CTk):
