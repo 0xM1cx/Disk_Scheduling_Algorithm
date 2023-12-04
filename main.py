@@ -8,8 +8,15 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 
+
+'''
+# TODO 
+1. Add animation to the line plot
+'''
+
 ## Algorithms
 from FCFS import FCFS
+from SSTF import SSTF
 '''
 * The width of the RequestTable must be lesser than the width of the ScatterLineChart
 '''
@@ -19,10 +26,12 @@ class ErrorMessage(customtkinter.CTkToplevel):
     def __init__(self, *args):
         super().__init__(*args)
         self.geometry("500x500")
-        font = customtkinter.CTkFont(family="Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace", size=40)
-        self.label = customtkinter.CTkLabel(self, font=font, width = 100, height=100, text_color="#b5e853")
+        font = customtkinter.CTkFont(family="Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace", size=30)
+        self.label = customtkinter.CTkLabel(self, font=font, width = 100, height=100, text_color="#b5e853", text="The Requests must be within the outermost and innermost disk range")
 
 class ScatterLineChart(customtkinter.CTkScrollableFrame):
+    
+    
     def __init__(self, master):
         super().__init__(master)
 
@@ -31,14 +40,30 @@ class ScatterLineChart(customtkinter.CTkScrollableFrame):
         self.y_data = y_data
 
         self.fig, self.ax = plt.subplots(figsize=(10, 9), dpi=100)
-        self.line, = self.ax.plot(self.x_data, self.y_data)
+        self.ax.clear()
+        self.line, = self.ax.plot(self.x_data, self.y_data, marker="o")
         
+
+        self.ax.set_yticks(self.y_data)
+
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
         self.canvas_widget = self.canvas.get_tk_widget()
         self.canvas_widget.pack() 
 
-    def update_plot(self, x_data, y_data):
+    def update_plot(self, x_data, y_data, calc_label, total_head_movements):
+        font = customtkinter.CTkFont(family="Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace", size=14)
+        
+        
+
+        # Update or recreate labels/widgets as needed
+        for widget in self.winfo_children():
+            widget.destroy()
+        
         self.start(x_data, y_data)
+        self.calcu_Label = customtkinter.CTkLabel(self, font=font, width = 50, height=50, text_color="#b5e853", text=f" = {calc_label}")
+        self.calcu_Label.pack()
+        self.total_calcu = customtkinter.CTkLabel(self, font=font, width=50, height=50, text_color="#b5e853", text=f"= {total_head_movements} Tracks")
+        self.total_calcu.pack()
         self.canvas.draw()
 
 #### The widgets in the frames must be in a grid
@@ -83,7 +108,7 @@ class OptionMenu(customtkinter.CTkFrame):
         self.headDisk.grid(row=1, column=1, padx=10, pady=10)
 
         ### The number of request ###
-        label_NumRequets = customtkinter.CTkLabel(self, font=font, text_color="#b5e853", text="Hoe many request do you want?") 
+        label_NumRequets = customtkinter.CTkLabel(self, font=font, text_color="#b5e853", text="How many request do you want?") 
         label_NumRequets.grid(row=0, column=2, padx=10, pady=10)
         self.NumRequest = customtkinter.CTkEntry(self, font=font, text_color="#b5e853", placeholder_text="No. of Requests")
         self.NumRequest.grid(row=1, column=2)
@@ -99,7 +124,8 @@ class OptionMenu(customtkinter.CTkFrame):
         
     def startExecution(self):
         DISK_ALGORITHMS = {
-            "FCFS": FCFS()
+            "FCFS": FCFS(), 
+            "SSTF": SSTF()
         }
         global entries
         requests = [int(entry.get()) for entry in entries]
@@ -109,15 +135,18 @@ class OptionMenu(customtkinter.CTkFrame):
             if value < 0 or value > int(self.inner_Disk.get()):
                 error = ErrorMessage()
                 self.removeAllInput()
+
         requests.insert(0, int(self.headDisk.get())) 
-
-        res_floats = DISK_ALGORITHMS[self.pickAlgo.get()].executeAlgorithm(requests)
-
-
         print(requests)
+        res_floats, total_head_movements, head_movement_calculation_str, req = DISK_ALGORITHMS[self.pickAlgo.get()].executeAlgorithm(requests)
+
         print(res_floats)
+        print(total_head_movements)
+        print(head_movement_calculation_str)
+        print(req)
+
         chart = self.master.scatterLineChart
-        chart.update_plot(res_floats, requests)
+        chart.update_plot(res_floats, req, head_movement_calculation_str, total_head_movements)
          
 
 
