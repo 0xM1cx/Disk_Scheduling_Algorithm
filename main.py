@@ -7,16 +7,21 @@ from time import sleep
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 
 '''
 # TODO 
 1. Add animation to the line plot
+2. Add a feature when picking UP and DOWN
+3. Make the graph stright not gay
 '''
 
 ## Algorithms
 from FCFS import FCFS
 from SSTF import SSTF
+from SCAN__CSCAN import SCAN, CSCAN
+
 '''
 * The width of the RequestTable must be lesser than the width of the ScatterLineChart
 '''
@@ -30,8 +35,6 @@ class ErrorMessage(customtkinter.CTkToplevel):
         self.label = customtkinter.CTkLabel(self, font=font, width = 100, height=100, text_color="#b5e853", text="The Requests must be within the outermost and innermost disk range")
 
 class ScatterLineChart(customtkinter.CTkScrollableFrame):
-    
-    
     def __init__(self, master):
         super().__init__(master)
 
@@ -50,10 +53,10 @@ class ScatterLineChart(customtkinter.CTkScrollableFrame):
         self.canvas_widget = self.canvas.get_tk_widget()
         self.canvas_widget.pack() 
 
+        self.animation = FuncAnimation(self.fig, self.update_plot, frames=len(self.x_data), interval=200, blit=False)
+
     def update_plot(self, x_data, y_data, calc_label, total_head_movements):
         font = customtkinter.CTkFont(family="Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace", size=14)
-        
-        
 
         # Update or recreate labels/widgets as needed
         for widget in self.winfo_children():
@@ -82,14 +85,12 @@ class RequestTable(customtkinter.CTkScrollableFrame):
                 entry.destroy()
             entries = []
 
-
         for i in range(noOfRequests):
                 entry = customtkinter.CTkEntry(target_frame)
                 entry.grid(row=self.rowCounter, column=0, pady=5, padx=80, sticky="ew")
                 entries.append(entry)
                 self.rowCounter += 1
 
-    
 class OptionMenu(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
@@ -137,19 +138,20 @@ class OptionMenu(customtkinter.CTkFrame):
                 self.removeAllInput()
 
         requests.insert(0, int(self.headDisk.get())) 
-        print(requests)
-        res_floats, total_head_movements, head_movement_calculation_str, req = DISK_ALGORITHMS[self.pickAlgo.get()].executeAlgorithm(requests)
 
-        print(res_floats)
-        print(total_head_movements)
-        print(head_movement_calculation_str)
-        print(req)
+        if (self.pickAlgo.get() == "FCFS"):
+            res_floats, total_head_movements, head_movement_calculation_str, req = DISK_ALGORITHMS[self.pickAlgo.get()].executeAlgorithm(requests)
+        elif (self.pickAlgo.get() == "SSTF"):
+            res_floats, total_head_movements, head_movement_calculation_str, req = DISK_ALGORITHMS[self.pickAlgo.get()].executeAlgorithm(requests)
+        elif (self.pickAlgo.get() == "SCAN"):
+            res_floats, total_head_movements, head_movement_calculation_str, req = SCAN(int(self.inner_Disk.get()), int(self.headDisk.get()), "U", requests)
+        elif (self.pickAlgo.get() == "C-SCAN"):
+            CSCAN(int(self.inner_Disk.get()), int(self.headDisk), "U", requests)
+       
 
         chart = self.master.scatterLineChart
         chart.update_plot(res_floats, req, head_movement_calculation_str, total_head_movements)
          
-
-
 
     def getInput(self, value):
         self.test = RequestTable(self)
