@@ -32,6 +32,8 @@ def SCAN(total_tracks, current_head, direction, requested_tracks):
     rand_floats = [currentTime]
     for i in range(len(sequence)-1):
         currentTime += round(np.random.uniform(0.0, 2.0), 1) 
+        if currentTime in rand_floats:
+             currentTime += 0.5
         rand_floats.append(currentTime)
 
 
@@ -106,7 +108,9 @@ def CSCAN(total_tracks, current_head, direction, requested_tracks):
     currentTime = 0
     rand_floats = [currentTime]
     for i in range(len(sequence)-1):
-        currentTime += round(np.random.uniform(0.0, 2.0), 1) 
+        currentTime += round(np.random.uniform(0.0, 2.0), 1)
+        if currentTime in rand_floats:
+             currentTime += 0.5
         rand_floats.append(currentTime)
 
 

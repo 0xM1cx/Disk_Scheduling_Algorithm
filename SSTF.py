@@ -28,7 +28,10 @@ class SSTF:
         
         rand_floats = [self.currentTime]
         for i in range(len(requests) - 1):
-            self.currentTime += round(np.random.uniform(0.0, 2.0), 1)
+            # self.currentTime += np.random.random_integers(0, 10)
+            self.currentTime += 1
+            # if self.currentTime in rand_floats:
+            #     self.currentTime += 0.5
             rand_floats.append(self.currentTime)
 
         head_movements_calculation_string = []

@@ -5,9 +5,10 @@ class FCFS:
     def executeAlgorithm(self, requests):
         rand_floats = [self.currentTime]
         for i in range(len(requests)-1):
-            self.currentTime += round(np.random.uniform(0.0, 2.0), 1) 
+            self.currentTime += np.random.random_integers(0, 10) 
+            if self.currentTime in rand_floats:
+                self.currentTime += 0.5
             rand_floats.append(self.currentTime)
-
 
         head_movements_calculation_string = []
         total_head_movements = 0
@@ -29,6 +30,3 @@ class FCFS:
 
         head_movements_calculation_string = " ".join(head_movements_calculation_string)
         return rand_floats, total_head_movements, head_movements_calculation_string, requests
-
-
-        

@@ -2,6 +2,7 @@ import customtkinter
 import tkinter as tk
 from tkinter import ttk
 from time import sleep
+import numpy as np
 
 ## Plotting Stuff
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -31,7 +32,7 @@ class ErrorMessage(customtkinter.CTkToplevel):
     def __init__(self, *args):
         super().__init__(*args)
         self.geometry("500x500")
-        font = customtkinter.CTkFont(family="Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace", size=30)
+        font = customtkinter.CTkFont(family="Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace", size=20)
         self.label = customtkinter.CTkLabel(self, font=font, width = 100, height=100, text_color="#b5e853", text="The Requests must be within the outermost and innermost disk range")
 
 class ScatterLineChart(customtkinter.CTkScrollableFrame):
@@ -44,10 +45,11 @@ class ScatterLineChart(customtkinter.CTkScrollableFrame):
 
         self.fig, self.ax = plt.subplots(figsize=(10, 9), dpi=100)
         self.ax.clear()
-        self.line, = self.ax.plot(self.x_data, self.y_data, marker="o")
+        self.ax.plot(self.x_data, self.y_data, marker="o", linestyle='', color='orange')
         
-
         self.ax.set_yticks(self.y_data)
+        self.ax.set_xticks(self.x_data)
+
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
         self.canvas_widget = self.canvas.get_tk_widget()
@@ -146,12 +148,10 @@ class OptionMenu(customtkinter.CTkFrame):
         elif (self.pickAlgo.get() == "SCAN"):
             res_floats, total_head_movements, head_movement_calculation_str, req = SCAN(int(self.inner_Disk.get()), int(self.headDisk.get()), "U", requests)
         elif (self.pickAlgo.get() == "C-SCAN"):
-            CSCAN(int(self.inner_Disk.get()), int(self.headDisk), "U", requests)
+            res_floats, total_head_movements, head_movement_calculation_str, req = CSCAN(int(self.inner_Disk.get()), int(self.headDisk.get()), "U", requests)
        
-
         chart = self.master.scatterLineChart
         chart.update_plot(res_floats, req, head_movement_calculation_str, total_head_movements)
-         
 
     def getInput(self, value):
         self.test = RequestTable(self)
@@ -161,8 +161,6 @@ class OptionMenu(customtkinter.CTkFrame):
         self.inner_Disk.delete("0.0", "end")
         self.headDisk.delete("0.0", "end")
         self.NumRequest.delete("0.0", "end")
-
-
 
 class App(customtkinter.CTk):
     def __init__(self):
