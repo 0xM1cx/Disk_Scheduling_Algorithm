@@ -22,6 +22,8 @@ from matplotlib.animation import FuncAnimation
 from FCFS import FCFS
 from SSTF import SSTF
 from SCAN__CSCAN import SCAN, CSCAN
+from CLookDiskScheduling import CLOOK
+from LookDiskScheduling import LOOK
 
 '''
 * The width of the RequestTable must be lesser than the width of the ScatterLineChart
@@ -38,17 +40,27 @@ class ErrorMessage(customtkinter.CTkToplevel):
 class ScatterLineChart(customtkinter.CTkScrollableFrame):
     def __init__(self, master):
         super().__init__(master)
+        
 
     def start(self, x_data, y_data):
         self.x_data = x_data
         self.y_data = y_data
 
         self.fig, self.ax = plt.subplots(figsize=(10, 9), dpi=100)
+        self.fig.patch.set_facecolor('#2b2b2b')
         self.ax.clear()
-        self.ax.plot(self.x_data, self.y_data, marker="o", linestyle='', color='orange')
-        
+        self.ax.plot(self.x_data, self.y_data, marker="o", color='#b5e853')
+
+        self.ax.set_facecolor('#2b2b2b') 
+
         self.ax.set_yticks(self.y_data)
         self.ax.set_xticks(self.x_data)
+
+
+        self.ax.xaxis.label.set_color("#b5e853")
+        self.ax.yaxis.label.set_color("#b5e853")
+        self.ax.tick_params(axis='x', colors='#b5e853')
+        self.ax.tick_params(axis='y', colors='#b5e853')
 
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self)
@@ -117,7 +129,7 @@ class OptionMenu(customtkinter.CTkFrame):
         self.NumRequest.grid(row=1, column=2)
 
         ### Algorithm Picker ###
-        self.pickAlgo = customtkinter.CTkComboBox(self, values=["FCFS", "SSTF", "SCAN", "LOOK", "C-SCAN", "C-LOOK"], command=self.getInput)
+        self.pickAlgo = customtkinter.CTkComboBox(self, values=["FCFS", "SSTF", "SCAN", "LOOK", "CSCAN", "CLOOK"], command=self.getInput)
         self.pickAlgo.set("Pick A Algorithm")
         self.pickAlgo.grid(row=0, column=3, padx=10, pady=10)
 
@@ -147,8 +159,13 @@ class OptionMenu(customtkinter.CTkFrame):
             res_floats, total_head_movements, head_movement_calculation_str, req = DISK_ALGORITHMS[self.pickAlgo.get()].executeAlgorithm(requests)
         elif (self.pickAlgo.get() == "SCAN"):
             res_floats, total_head_movements, head_movement_calculation_str, req = SCAN(int(self.inner_Disk.get()), int(self.headDisk.get()), "U", requests)
-        elif (self.pickAlgo.get() == "C-SCAN"):
+        elif (self.pickAlgo.get() == "CSCAN"):
             res_floats, total_head_movements, head_movement_calculation_str, req = CSCAN(int(self.inner_Disk.get()), int(self.headDisk.get()), "U", requests)
+        elif (self.pickAlgo.get() == "CLOOk"):
+            res_floats, total_head_movements, head_movement_calculation_str, req = CLOOK(int(self.inner_Disk.get()), int(self.headDisk.get()), "high", requests)
+        elif (self.pickAlgo.get() == "LOOK"):
+            res_floats, total_head_movements, head_movement_calculation_str, req = LOOK(int(self.inner_Disk.get()), int(self.headDisk.get()), "high", requests)
+
        
         chart = self.master.scatterLineChart
         chart.update_plot(res_floats, req, head_movement_calculation_str, total_head_movements)

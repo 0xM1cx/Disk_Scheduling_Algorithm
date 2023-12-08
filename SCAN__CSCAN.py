@@ -31,7 +31,7 @@ def SCAN(total_tracks, current_head, direction, requested_tracks):
     currentTime = 0
     rand_floats = [currentTime]
     for i in range(len(sequence)-1):
-        currentTime += round(np.random.uniform(0.0, 2.0), 1) 
+        currentTime += np.random.random_integers(0, 10) 
         if currentTime in rand_floats:
              currentTime += 0.5
         rand_floats.append(currentTime)
@@ -55,8 +55,8 @@ def SCAN(total_tracks, current_head, direction, requested_tracks):
         head_movements_calculation_string.append("(" + str(bigger) + "-" + str(smaller) + ")" + plus_symbol)
 
         
-    head_movements_calculation_string = " ".join(head_movements_calculation_string)
-    return  rand_floats, total_head_movements, head_movements_calculation_string, sequence 
+    _head_movements_calculation_string = " ".join(head_movements_calculation_string)
+    return  rand_floats, total_head_movements, _head_movements_calculation_string, sequence 
     
 def CSCAN(total_tracks, current_head, direction, requested_tracks):
     outermost_track = 0
@@ -77,29 +77,6 @@ def CSCAN(total_tracks, current_head, direction, requested_tracks):
         downward_scan = [track for track in reversed(track_list) if current_head >= track]
         sequence = downward_scan + upward_scan
     
-    # print("C-SCAN Disk Scheduling")
-    # print(f"Number of Tracks: {total_tracks}")
-    # print(f"\t- Outermost Track: {outermost_track}")
-    # print(f"\t- Innermost Track: {innermost_track}")
-    
-    # if direction.upper() == "U":
-    #     print("Movement Direction: Upward")
-    # elif direction.upper() == "D":
-    #     print("Movement Direction: Downward")
-        
-    # print(f"Requested Tracks: {requested_tracks}\n")
-    
-    # print("Sequence: ", end="")
-    # print(*sequence, sep=" => ")
-            
-    # for index in range(len(sequence) - 1):
-    #     head_movements.append(abs(sequence[index] - sequence[index + 1]))
-    #     total_head_movements += abs(sequence[index] - sequence[index + 1])
-            
-    # print("Head Movements: ", end="")
-    # print(*head_movements, sep=" + ")
-    
-    # print(f"Total Head Movements: {total_head_movements} Tracks")
     
 
     head_movements_calculation_string = []
@@ -108,7 +85,7 @@ def CSCAN(total_tracks, current_head, direction, requested_tracks):
     currentTime = 0
     rand_floats = [currentTime]
     for i in range(len(sequence)-1):
-        currentTime += round(np.random.uniform(0.0, 2.0), 1)
+        currentTime += np.random.random_integers(0, 10)
         if currentTime in rand_floats:
              currentTime += 0.5
         rand_floats.append(currentTime)
@@ -131,4 +108,5 @@ def CSCAN(total_tracks, current_head, direction, requested_tracks):
 
             
     head_movements_calculation_string = " ".join(head_movements_calculation_string)
+    head_movements_calculation_string = head_movements_calculation_string.rstrip('+')
     return  rand_floats, total_head_movements, head_movements_calculation_string, sequence  

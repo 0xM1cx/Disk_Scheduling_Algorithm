@@ -53,7 +53,8 @@ class SSTF:
 
             head_movements_calculation_string.append("(" + str(bigger) + "-" + str(smaller) + ")" + plus_symbol)
 
-
+        head_movements_calculation_string = " ".join(head_movements_calculation_string)
+        head_movements_calculation_string = head_movements_calculation_string.rstrip('+')
         return rand_floats, total_head_movements, head_movements_calculation_string, temp_data
 
 
