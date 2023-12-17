@@ -22,8 +22,8 @@ from matplotlib.animation import FuncAnimation
 from FCFS import FCFS
 from SSTF import SSTF
 from SCAN__CSCAN import SCAN, CSCAN
-from CLookDiskScheduling import CLOOK
 from LookDiskScheduling import LOOK
+from CLookDiskScheduling import CLOOK
 
 '''
 * The width of the RequestTable must be lesser than the width of the ScatterLineChart
@@ -161,7 +161,7 @@ class OptionMenu(customtkinter.CTkFrame):
             res_floats, total_head_movements, head_movement_calculation_str, req = SCAN(int(self.inner_Disk.get()), int(self.headDisk.get()), "U", requests)
         elif (self.pickAlgo.get() == "CSCAN"):
             res_floats, total_head_movements, head_movement_calculation_str, req = CSCAN(int(self.inner_Disk.get()), int(self.headDisk.get()), "U", requests)
-        elif (self.pickAlgo.get() == "CLOOk"):
+        elif (self.pickAlgo.get() == "CLOOK"):
             res_floats, total_head_movements, head_movement_calculation_str, req = CLOOK(int(self.inner_Disk.get()), int(self.headDisk.get()), "high", requests)
         elif (self.pickAlgo.get() == "LOOK"):
             res_floats, total_head_movements, head_movement_calculation_str, req = LOOK(int(self.inner_Disk.get()), int(self.headDisk.get()), "high", requests)
