@@ -2,7 +2,7 @@ import numpy as np
 
 def SCAN(total_tracks, current_head, direction, requested_tracks):
     outermost_track = 0
-    innermost_track = total_tracks - 1
+    innermost_track = total_tracks
     
     track_list = []
     
@@ -55,12 +55,15 @@ def SCAN(total_tracks, current_head, direction, requested_tracks):
         head_movements_calculation_string.append("(" + str(bigger) + "-" + str(smaller) + ")" + plus_symbol)
 
         
-    _head_movements_calculation_string = " ".join(head_movements_calculation_string)
-    return  rand_floats, total_head_movements, _head_movements_calculation_string, sequence 
+    head_movements_calculation_string = " ".join(head_movements_calculation_string)
+    head_movements_calculation_string = head_movements_calculation_string.rstrip('+')
+    print(f"SCAN: {head_movements_calculation_string}")
+    print(f"SCAN: {sequence}")
+    return  rand_floats, total_head_movements, head_movements_calculation_string, sequence 
     
 def CSCAN(total_tracks, current_head, direction, requested_tracks):
     outermost_track = 0
-    innermost_track = total_tracks - 1
+    innermost_track = total_tracks
     
     track_list = [outermost_track, innermost_track, current_head]
     track_list.extend(requested_tracks)
@@ -109,4 +112,5 @@ def CSCAN(total_tracks, current_head, direction, requested_tracks):
             
     head_movements_calculation_string = " ".join(head_movements_calculation_string)
     head_movements_calculation_string = head_movements_calculation_string.rstrip('+')
+    
     return  rand_floats, total_head_movements, head_movements_calculation_string, sequence  

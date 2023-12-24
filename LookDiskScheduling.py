@@ -4,12 +4,6 @@ def LOOK(totalDiskSize, initialHeadPosition, direction, requested_tracks):
     lookDataList= []
     counter = 0
 
-    # requestNumber = int(input("Enter number of request: "))
-
-    # for item in range(1, requestNumber+1):
-    #     tempRequestSequence = int(input(f"Process #{item}: "))
-    #     data.append(tempRequestSequence)
-
     data.sort()
 
     initialHeadPosition = initialHeadPosition
@@ -62,18 +56,18 @@ def LOOK(totalDiskSize, initialHeadPosition, direction, requested_tracks):
     head_movements_calculation_string = []
     total_head_movements = 0
     # Calculation of total number of head movements
-    for  index in range(len(requested_tracks) - 1):
-        total_head_movements += abs(requested_tracks[index] - requested_tracks[index + 1])
-        if index == len(requested_tracks) - 1:
+    for  index in range(len(lookDataList) - 1):
+        total_head_movements += abs(lookDataList[index] - lookDataList[index + 1])
+        if index == len(lookDataList) - 1:
             plus_symbol = ""          
         else: 
             plus_symbol = " +"
-        if requested_tracks[index] > requested_tracks[index + 1]:
-            bigger = requested_tracks[index]
-            smaller = requested_tracks[index + 1]
+        if lookDataList[index] > lookDataList[index + 1]:
+            bigger = lookDataList[index]
+            smaller = lookDataList[index + 1]
         else:
-            bigger = requested_tracks[index + 1]
-            smaller = requested_tracks[index]
+            bigger = lookDataList[index + 1]
+            smaller = lookDataList[index]
 
         head_movements_calculation_string.append("(" + str(bigger) + "-" + str(smaller) + ")" + plus_symbol)
 

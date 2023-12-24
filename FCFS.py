@@ -30,4 +30,6 @@ class FCFS:
 
         head_movements_calculation_string = " ".join(head_movements_calculation_string)
         head_movements_calculation_string = head_movements_calculation_string.rstrip('+')
+        print(f"FCFS: {head_movements_calculation_string}")
+        print(f"FCFS: {requests}")
         return rand_floats, total_head_movements, head_movements_calculation_string, requests

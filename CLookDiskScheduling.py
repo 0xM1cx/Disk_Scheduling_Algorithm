@@ -64,18 +64,18 @@ def CLOOK(totalDiskSize, initialHeadPosition, direction, requested_tracks):
     head_movements_calculation_string = []
     total_head_movements = 0
     # Calculation of total number of head movements
-    for  index in range(len(requested_tracks) - 1):
-        total_head_movements += abs(requested_tracks[index] - requested_tracks[index + 1])
-        if index == len(requested_tracks) - 1:
+    for  index in range(len(c_lookDataList) - 1):
+        total_head_movements += abs(c_lookDataList[index] - c_lookDataList[index + 1])
+        if index == len(c_lookDataList) - 1:
             plus_symbol = ""          
         else: 
             plus_symbol = " +"
-        if requested_tracks[index] > requested_tracks[index + 1]:
-            bigger = requested_tracks[index]
-            smaller = requested_tracks[index + 1]
+        if c_lookDataList[index] > c_lookDataList[index + 1]:
+            bigger = c_lookDataList[index]
+            smaller = c_lookDataList[index + 1]
         else:
-            bigger = requested_tracks[index + 1]
-            smaller = requested_tracks[index]
+            bigger = c_lookDataList[index + 1]
+            smaller = c_lookDataList[index]
 
         head_movements_calculation_string.append("(" + str(bigger) + "-" + str(smaller) + ")" + plus_symbol)
 

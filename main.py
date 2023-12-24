@@ -187,6 +187,7 @@ class App(customtkinter.CTk):
         self.columnconfigure((0, 1), weight=1)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=0)
+        self.iconbitmap("./icon.ico")
 
         self.optionMenu = OptionMenu(self)
         self.optionMenu.grid(row=1, column=0, sticky="ew", columnspan=2, padx=20, pady=20)
